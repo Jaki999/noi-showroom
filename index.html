@@ -62,6 +62,24 @@
   .sp { display: flex; flex-wrap: wrap; gap: 6px; }
   .sp span { background: var(--green-soft); color: #2f5a22; border-radius: 999px; padding: 5px 10px; font-size: 13px; font-weight: 500; }
   .cred { font-size: 12px; color: var(--muted); margin-top: 28px; border-top: 1px solid var(--line); padding-top: 12px; }
+  .bigbtn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin: 14px 0 4px; padding: 12px 14px; border: 0; border-radius: 12px; background: var(--green); color: #fff; font: 600 14px Inter; cursor: pointer; }
+  .bigbtn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.8; }
+  .links { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .links a { display: flex; align-items: center; gap: 10px; padding: 11px 12px; border: 1px solid var(--line); border-radius: 12px; color: var(--ink); text-decoration: none; font: 600 14px Inter; }
+  .links a:active, .links a:hover { border-color: var(--green); }
+  .links svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.7; flex: 0 0 auto; }
+  .links span { display: flex; flex-direction: column; line-height: 1.2; min-width: 0; }
+  .links small { font-weight: 400; font-size: 11.5px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  #brochure { position: fixed; inset: 0; z-index: 30; background: #1b1b19; display: none; flex-direction: column; }
+  #brochure.show { display: flex; }
+  #brochure .btop { display: flex; align-items: center; justify-content: space-between; padding: max(10px, env(safe-area-inset-top)) 12px 10px; color: #fff; flex: 0 0 auto; }
+  #brochure .btitle { font: 500 14px Inter; }
+  #brochure .bctl { display: flex; gap: 6px; }
+  #brochure .bctl button { min-width: 40px; height: 38px; border: 0; border-radius: 10px; background: rgba(255,255,255,.14); color: #fff; font: 600 16px Inter; cursor: pointer; padding: 0 12px; }
+  #brochure .bctl #bClose { font-size: 13.5px; background: #fff; color: var(--ink); }
+  #brochure .bscroll { flex: 1 1 auto; overflow: auto; -webkit-overflow-scrolling: touch; touch-action: pan-x pan-y; }
+  #brochure .bpages { width: 100%; padding: 6px 10px max(20px, env(safe-area-inset-bottom)); display: flex; flex-direction: column; gap: 12px; align-items: flex-start; transition: width .2s; }
+  #brochure .bpages img { width: 100%; height: auto; display: block; background: #fff; border-radius: 4px; box-shadow: 0 4px 20px rgba(0,0,0,.4); }
 
   #loader { position: fixed; inset: 0; display: grid; place-items: center; background: var(--bg); z-index: 20; transition: opacity .5s; }
   #loader.hide { opacity: 0; pointer-events: none; }
@@ -148,6 +166,7 @@
   <button class="hbtn close" id="btnClose">Cerrar</button>
   <div style="font-size:12px;color:var(--muted);margin-top:10px">TP2 · Diseño de Paisaje · UADE 2026</div>
   <h2>Volver al patio, volver a lo natural</h2>
+  <button class="bigbtn" id="btnBrochure"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="1.5"/><path d="M12 4v16"/></svg>Ver brochure</button>
   <p>Showroom de revestimientos <b>noi</b> en Falcón 2380, Flores. Un lote angosto de 10 × 30 m donde el local se abre a una pérgola y a un patio verde, en la lógica de las casas chorizo.</p>
   <h4>noi</h4>
   <p>Estudio argentino de diseño y producción de revestimientos. Combina la artesanía con una mirada contemporánea, buscando que las superficies sean protagonistas.</p>
@@ -160,8 +179,29 @@
   <p><b>3 · Patio.</b> Jardín vertical, canteros revestidos, vegetación y cerámicos.</p>
   <h4>Vegetación</h4>
   <div class="sp"><span>Jazmín trepador</span><span>Jazmín chino</span><span>Lavanda</span><span>Lazo de amor</span><span>Olivo oloroso</span><span>Geranio aromático</span><span>Magnolia</span></div>
+  <button class="bigbtn" id="btnBrochure2"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="1.5"/><path d="M12 4v16"/></svg>Ver brochure</button>
+  <h4>Redes de NOI Estudio</h4>
+  <div class="links">
+    <a href="https://noiestudio.com.ar/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.2 3 14.8 0 18M12 3c-3 3.2-3 14.8 0 18"/></svg><span>Web<small>noiestudio.com.ar</small></span></a>
+    <a href="https://www.instagram.com/noi_estudio/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1" fill="currentColor"/></svg><span>Instagram<small>@noi_estudio</small></span></a>
+  </div>
   <div class="cred">Acuña · de Castro F. · Policella<br>UADE 2026 · Diseño de Paisaje</div>
 </aside>
+
+<div id="brochure" aria-hidden="true">
+  <div class="btop">
+    <span class="btitle">Brochure · <b id="bPage">1</b>/2</span>
+    <div class="bctl">
+      <button id="bOut" aria-label="Alejar">−</button><button id="bIn" aria-label="Acercar">+</button><button id="bClose" aria-label="Cerrar">Cerrar</button>
+    </div>
+  </div>
+  <div class="bscroll" id="bScroll">
+    <div class="bpages" id="bPages">
+      <img src="brochure/b01.jpg?v=20261118c" alt="Brochure NOI, página 1" loading="lazy">
+      <img src="brochure/b02.jpg?v=20261118c" alt="Brochure NOI, página 2" loading="lazy">
+    </div>
+  </div>
+</div>
 
 <script type="module">
 import * as THREE from 'three';
@@ -256,7 +296,7 @@ async function fetchProgress(url) {
   for (;;) { const { done, value } = await reader.read(); if (done) break; chunks.push(value); got += value.length; lbar.style.width = Math.min(95, got / total * 95) + '%'; }
   const out = new Uint8Array(got); let o = 0; for (const c of chunks) { out.set(c, o); o += c.length; } return out.buffer;
 }
-const VER = '20261118b';   // cambiar en cada actualización para que el navegador no use archivos viejos
+const VER = '20261118c';   // cambiar en cada actualización para que el navegador no use archivos viejos
 const [meta, buf] = await Promise.all([fetch(`model.json?v=${VER}`, { cache: 'no-cache' }).then(r => r.json()), fetchProgress(`model.bin?v=${VER}`)]);
 const builtMeshes = [];
 for (const m of meta.meshes) {
@@ -594,6 +634,32 @@ document.getElementById('tgLbl').onclick = e => { e.target.classList.toggle('on'
 document.getElementById('tgPath').onclick = e => { pathGroup.visible = !pathGroup.visible; e.target.classList.toggle('on', pathGroup.visible); syncLabels(); updateSun(); };
 document.getElementById('btnInfo').onclick = () => document.getElementById('info').classList.add('show');
 document.getElementById('btnClose').onclick = () => document.getElementById('info').classList.remove('show');
+
+// ---------- visor del brochure ----------
+const bro = document.getElementById('brochure'), bScroll = document.getElementById('bScroll'), bPages = document.getElementById('bPages');
+let bZoom = 1;
+function setBZoom(z, cx = 0.5, cy = 0.5) {
+  const old = bZoom; bZoom = Math.min(4, Math.max(1, z)); if (old === bZoom) return;
+  const fx = (bScroll.scrollLeft + bScroll.clientWidth * cx) / bScroll.scrollWidth, fy = (bScroll.scrollTop + bScroll.clientHeight * cy) / bScroll.scrollHeight;
+  bPages.style.transition = 'none'; bPages.style.width = (bZoom * 100) + '%';
+  bScroll.scrollLeft = fx * bScroll.scrollWidth - bScroll.clientWidth * cx; bScroll.scrollTop = fy * bScroll.scrollHeight - bScroll.clientHeight * cy;
+}
+function openBrochure() { document.getElementById('info').classList.remove('show'); bro.classList.add('show'); bro.setAttribute('aria-hidden', 'false'); setBZoom(1); bScroll.scrollTop = 0; }
+function closeBrochure() { bro.classList.remove('show'); bro.setAttribute('aria-hidden', 'true'); }
+document.getElementById('btnBrochure').onclick = openBrochure;
+document.getElementById('btnBrochure2').onclick = openBrochure;
+document.getElementById('bClose').onclick = closeBrochure;
+document.getElementById('bIn').onclick = () => setBZoom(bZoom * 1.5);
+document.getElementById('bOut').onclick = () => setBZoom(bZoom / 1.5);
+bScroll.addEventListener('dblclick', e => { const r = bScroll.getBoundingClientRect(); setBZoom(bZoom > 1.2 ? 1 : 2.5, (e.clientX - r.left) / r.width, (e.clientY - r.top) / r.height); });
+bScroll.addEventListener('wheel', e => { if (!e.ctrlKey) return; e.preventDefault(); const r = bScroll.getBoundingClientRect(); setBZoom(bZoom * (e.deltaY < 0 ? 1.15 : 1 / 1.15), (e.clientX - r.left) / r.width, (e.clientY - r.top) / r.height); }, { passive: false });
+// pellizco con dos dedos (el visor 3D bloquea el zoom nativo de la página)
+let pinch = null;
+bScroll.addEventListener('touchstart', e => { if (e.touches.length === 2) { const [a, b] = e.touches; pinch = { d: Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY), z: bZoom }; } }, { passive: true });
+bScroll.addEventListener('touchmove', e => { if (pinch && e.touches.length === 2) { e.preventDefault(); const [a, b] = e.touches; const r = bScroll.getBoundingClientRect(); setBZoom(pinch.z * Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY) / pinch.d, ((a.clientX + b.clientX) / 2 - r.left) / r.width, ((a.clientY + b.clientY) / 2 - r.top) / r.height); } }, { passive: false });
+bScroll.addEventListener('touchend', () => { pinch = null; });
+bScroll.addEventListener('scroll', () => { const imgs = bPages.querySelectorAll('img'); const mid = bScroll.scrollTop + bScroll.clientHeight / 2; let p = 1; imgs.forEach((im, i) => { if (im.offsetTop <= mid) p = i + 1; }); document.getElementById('bPage').textContent = p; });
+addEventListener('keydown', e => { if (e.key === 'Escape' && bro.classList.contains('show')) closeBrochure(); });
 
 // ---------- inicio ----------
 persp.position.copy(M(-60, -70, 55)); controls.target.copy(M(5, 15, 0)); controls.update();
