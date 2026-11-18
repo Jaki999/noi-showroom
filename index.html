@@ -166,7 +166,6 @@
   <button class="hbtn close" id="btnClose">Cerrar</button>
   <div style="font-size:12px;color:var(--muted);margin-top:10px">TP2 · Diseño de Paisaje · UADE 2026</div>
   <h2>Volver al patio, volver a lo natural</h2>
-  <button class="bigbtn" id="btnBrochure"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="1.5"/><path d="M12 4v16"/></svg>Ver brochure</button>
   <p>Showroom de revestimientos <b>noi</b> en Falcón 2380, Flores. Un lote angosto de 10 × 30 m donde el local se abre a una pérgola y a un patio verde, en la lógica de las casas chorizo.</p>
   <h4>noi</h4>
   <p>Estudio argentino de diseño y producción de revestimientos. Combina la artesanía con una mirada contemporánea, buscando que las superficies sean protagonistas.</p>
@@ -296,7 +295,7 @@ async function fetchProgress(url) {
   for (;;) { const { done, value } = await reader.read(); if (done) break; chunks.push(value); got += value.length; lbar.style.width = Math.min(95, got / total * 95) + '%'; }
   const out = new Uint8Array(got); let o = 0; for (const c of chunks) { out.set(c, o); o += c.length; } return out.buffer;
 }
-const VER = '20261118c';   // cambiar en cada actualización para que el navegador no use archivos viejos
+const VER = '20261118d';   // cambiar en cada actualización para que el navegador no use archivos viejos
 const [meta, buf] = await Promise.all([fetch(`model.json?v=${VER}`, { cache: 'no-cache' }).then(r => r.json()), fetchProgress(`model.bin?v=${VER}`)]);
 const builtMeshes = [];
 for (const m of meta.meshes) {
@@ -646,7 +645,6 @@ function setBZoom(z, cx = 0.5, cy = 0.5) {
 }
 function openBrochure() { document.getElementById('info').classList.remove('show'); bro.classList.add('show'); bro.setAttribute('aria-hidden', 'false'); setBZoom(1); bScroll.scrollTop = 0; }
 function closeBrochure() { bro.classList.remove('show'); bro.setAttribute('aria-hidden', 'true'); }
-document.getElementById('btnBrochure').onclick = openBrochure;
 document.getElementById('btnBrochure2').onclick = openBrochure;
 document.getElementById('bClose').onclick = closeBrochure;
 document.getElementById('bIn').onclick = () => setBZoom(bZoom * 1.5);
