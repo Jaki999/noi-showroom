@@ -290,20 +290,18 @@ for (const key in groupsVeg) {
       const url = `veg/p${k}${side}.png`;
       const tex = await (texCache[url] ||= loadTex(url)); if (!tex) return;
       const mtl = new THREE.MeshLambertMaterial({ map: tex, alphaTest: 0.45, side: THREE.DoubleSide });
-      if (side === 't') {   // vista superior: sólo se muestra en planta
-        const im = new THREE.InstancedMesh(planeT, mtl, list.length); const m4 = new THREE.Matrix4();
-        list.forEach((u, i) => { const w = u.max[0] - u.min[0], d = u.max[1] - u.min[1]; m4.compose(new THREE.Vector3((u.min[0] + u.max[0]) / 2, (u.min[1] + u.max[1]) / 2, u.max[2] + 0.02), new THREE.Quaternion(), new THREE.Vector3(w, d, 1)); im.setMatrixAt(i, m4); });
-        im.userData = { s, p, veg: true, top: true }; im.visible = false; part(s, p).add(im); vegMeshes.push(im); return;
-      }
-      const im = new THREE.InstancedMesh(side === 'f' ? planeF : planeS, mtl, list.length);
+      // cada ejemplar usa su transformación real de SketchUp (posición + rotación + escala) sobre los ejes locales de la planta
+      const pl = meta.plants[k];
+      const lw = pl.lmax[0] - pl.lmin[0], ld = pl.lmax[1] - pl.lmin[1], lh = pl.lmax[2] - pl.lmin[2];
+      const lc = new THREE.Vector3((pl.lmin[0] + pl.lmax[0]) / 2, (pl.lmin[1] + pl.lmax[1]) / 2, (pl.lmin[2] + pl.lmax[2]) / 2);
+      const local = new THREE.Matrix4(), U = new THREE.Matrix4(), m4 = new THREE.Matrix4();
+      if (side === 't') local.compose(new THREE.Vector3(lc.x, lc.y, pl.lmax[2] + 0.02), new THREE.Quaternion(), new THREE.Vector3(lw, ld, 1));
+      else if (side === 'f') local.compose(lc, new THREE.Quaternion(), new THREE.Vector3(Math.max(lw, .05), 1, lh));
+      else local.compose(lc, new THREE.Quaternion(), new THREE.Vector3(1, Math.max(ld, .05), lh));
+      const im = new THREE.InstancedMesh(side === 'f' ? planeF : side === 's' ? planeS : planeT, mtl, list.length);
+      list.forEach((u, i) => { U.fromArray(u.m); m4.multiplyMatrices(U, local); im.setMatrixAt(i, m4); });
+      if (side === 't') { im.userData = { s, p, veg: true, top: true }; im.visible = false; part(s, p).add(im); vegMeshes.push(im); return; }
       im.customDepthMaterial = new THREE.MeshDepthMaterial({ depthPacking: THREE.RGBADepthPacking, map: tex, alphaTest: 0.45 });
-      const m4 = new THREE.Matrix4();
-      list.forEach((u, i) => {
-        const w = u.max[0] - u.min[0], d = u.max[1] - u.min[1], h = u.max[2] - u.min[2];
-        const c = new THREE.Vector3((u.min[0] + u.max[0]) / 2, (u.min[1] + u.max[1]) / 2, (u.min[2] + u.max[2]) / 2);
-        const sc = side === 'f' ? new THREE.Vector3(Math.max(w, .05), 1, h) : new THREE.Vector3(1, Math.max(d, .05), h);
-        m4.compose(c, new THREE.Quaternion(), sc); im.setMatrixAt(i, m4);
-      });
       im.castShadow = true; im.receiveShadow = true; im.userData = { s, p, veg: true };
       part(s, p).add(im); vegMeshes.push(im);
     })());
