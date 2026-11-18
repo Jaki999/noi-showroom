@@ -71,8 +71,13 @@
   #hint { position: fixed; left: 50%; transform: translateX(-50%); top: calc(max(14px, env(safe-area-inset-top)) + 64px); font-size: 12px; color: var(--muted); background: var(--panel); padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line); z-index: 4; transition: opacity .6s; pointer-events: none; white-space: nowrap; }
   @media (max-width: 560px) {
     .brand h1 { font-size: 18px; }
-    nav#modes { gap: 0; padding: 4px; }
-    nav#modes button { min-width: 0; flex: 1 1 0; padding: 7px 5px; font-size: 11px; }
+    /* barra inferior a todo el ancho, con botones separados y áreas de toque grandes */
+    nav#modes { left: 8px; right: 8px; transform: none; max-width: none; justify-content: space-between; gap: 6px; padding: 6px; border-radius: 18px; overflow: visible; }
+    nav#modes button { flex: 1 1 0; min-width: 0; min-height: 56px; padding: 8px 2px; font-size: 10.5px; gap: 5px; border-radius: 12px; justify-content: center; }
+    nav#modes button svg { width: 22px; height: 22px; }
+    .panel { width: calc(100vw - 16px); bottom: calc(max(12px, env(safe-area-inset-bottom)) + 92px); padding: 14px; }
+    .panel .chip { padding: 9px 13px; }
+    .row { gap: 8px; }
   }
 </style>
 <script type="importmap">
